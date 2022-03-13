@@ -1,5 +1,5 @@
 package org.kayteam.ptc.game;
 
 public enum TeamColour {
-    RED, BLUE, GREEN, YELLOW
+    RED, BLUE, GREEN, YELLOW, NONE
 }

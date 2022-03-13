@@ -8,13 +8,16 @@ import org.kayteam.ptc.player.PlayerManager;
 
 public final class PTC extends JavaPlugin {
 
-    public static Yaml settings = new Yaml(PTC.getPTC(), "settings");
-
     public static Yaml messages = new Yaml(PTC.getPTC(), "messages");
 
     @Override
     public void onEnable() {
+        registerFiles();
         PTC.ptc = this;
+    }
+
+    private void registerFiles(){
+        messages.registerFileConfiguration();
     }
 
     @Override
@@ -55,5 +58,13 @@ public final class PTC extends JavaPlugin {
 
     public static PlayerManager getPlayerManager() {
         return playerManager;
+    }
+
+    // Configurations
+
+    private static GeneralConfigurations generalConfigurations = new GeneralConfigurations();
+
+    public static GeneralConfigurations getGeneralConfigurations() {
+        return generalConfigurations;
     }
 }
