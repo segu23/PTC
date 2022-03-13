@@ -1,0 +1,4 @@
+prefix: "&9&lPTC &8»"
+noPermission: "&c¡No tienes permisos para hacer eso!"
+invalidArguments: "&cEl uso correcto del comando es &7/%usage%&c."
+onlyPlayerCommand: "&cEste comando solamente puede ser ejecutado por un jugador."
