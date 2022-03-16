@@ -1,13 +1,20 @@
 package org.kayteam.ptc.events;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
+import org.kayteam.ptc.PTC;
 
-public class PlayerLeaveArenaEvent extends Event {
+public class GamePlayerDeathEvent extends Event {
 
     private static final HandlerList handlerList = new HandlerList();
     private boolean cancelled = false;
+
+    private final Player gamePlayer;
+
+    public Player getPlayer() {
+        return gamePlayer;
+    }
 
     @Override
     public HandlerList getHandlers() {
@@ -16,5 +23,9 @@ public class PlayerLeaveArenaEvent extends Event {
 
     public static HandlerList getHandlerList() {
         return handlerList;
+    }
+
+    public GamePlayerDeathEvent(Player gamePlayer) {
+        this.gamePlayer = gamePlayer;
     }
 }

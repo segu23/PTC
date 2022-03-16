@@ -12,11 +12,11 @@ public class GamePlayer {
     private int kills = 0;
     private int deaths = 0;
     private TeamColour teamColour;
-    private final Game game;
+    private Game game;
+    private GamePlayerStatus gamePlayerStatus;
 
-    public GamePlayer(Player player, Game game) {
+    public GamePlayer(Player player) {
         this.player = player;
-        this.game = game;
         PTC.getPlayerManager().getGamePlayers().put(player, this);
     }
 
@@ -58,5 +58,17 @@ public class GamePlayer {
 
     public Game getGame() {
         return game;
+    }
+
+    public GamePlayerStatus getGamePlayerStatus() {
+        return gamePlayerStatus;
+    }
+
+    public void setGamePlayerStatus(GamePlayerStatus gamePlayerStatus) {
+        this.gamePlayerStatus = gamePlayerStatus;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
 }

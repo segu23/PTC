@@ -7,9 +7,12 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.kayteam.api.world.WorldUtil;
 import org.kayteam.ptc.PTC;
+import org.kayteam.ptc.arena.Arena;
 import org.kayteam.ptc.util.PermissionChecker;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,15 +21,47 @@ public class CMD_Arena implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(args.length > 0){
             switch(args[0].toLowerCase()){
-                case "create":{
-                    if(args.length > 1){
+                case "edit":{
+                    if(sender instanceof Player) {
+                        if (args.length > 1) {
+                            Player player = (Player) sender;
+                            String arenaName = args[0];
+                            Arena arena = PTC.getArenaManager().getArena(arenaName);
+                            if(arena != null){
 
+                            }else{
+                                // todo invalid arena
+                            }
+                        }else{
+                            // todo usage
+                        }
                     }
+                }
+                case "create":{
+                    if(sender instanceof Player){
+                        if(args.length > 1){
+                            Player player = (Player) sender;
+                            String arenaName = args[0];
+                            if(!PTC.getArenaManager().isArena(arenaName)){
+                                WorldUtil.createWorldTemplate(player.getWorld(), PTC.getPTC().getDataFolder()+"/arenas", arenaName);
+                                Arena arena = new Arena(arenaName, new File(PTC.getPTC().getDataFolder()+"/arenas/"+arenaName));
+                                PTC.getArenaManager().saveArena(arena);
+                            }else{
+                                // todo already exist arena
+                            }
+                        }else{
+                            // todo usage
+                        }
+                    }else{
+                        // todo only player command
+                    }
+                    break;
                 }
                 case "delete":{
                     if(args.length > 1){
 
                     }
+                    break;
                 }
                 case "defaultkit":{
                     if(sender instanceof Player){
@@ -49,11 +84,11 @@ public class CMD_Arena implements CommandExecutor, TabCompleter {
                         }
                     }else{
                         PTC.messages.sendMessage(sender, "onlyPlayerCommand");
-                        return;
                     }
+                    break;
                 }
                 case "join":{
-
+                    break;
                 }
             }
         }

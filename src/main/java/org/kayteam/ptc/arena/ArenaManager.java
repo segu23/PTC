@@ -38,11 +38,12 @@ public class ArenaManager {
     }
 
     public void loadArena(String arenaName){
-        Yaml arenaFile = new Yaml(PTC.getPTC(), "arenas/"+arenaName);
+        Yaml arenaFile = getArenaFile(arenaName);
         String worldTemplateName = arenaFile.getString("worldTemplateName");
         File worldTemplateDir = new File(PTC.getPTC().getDataFolder()+File.separator+"worldTemplates"+File.separator+arenaName);
         if(worldTemplateDir.exists()){
-            Arena arena = new Arena(arenaName, arenaFile, worldTemplateDir);
+            Arena arena = new Arena(arenaName, worldTemplateDir);
+            arena.setFile(arenaFile);
             Location waitingLobby = arenaFile.getLocation("waitingLobby");
             arena.setWaitingLobby(waitingLobby);
             HashMap<Integer, ItemStack> defaultKit = new HashMap<>();
@@ -56,14 +57,18 @@ public class ArenaManager {
             }
             arena.setDefaultKit(defaultKit);
             HashMap<TeamColour, Location> teamSpawnLocations = new HashMap<>();
+            HashMap<TeamColour, Location> coreLocations = new HashMap<>();
             for(String team : arenaFile.getFileConfiguration().getConfigurationSection("spawnLocations").getKeys(false)) {
                 try{
                     TeamColour teamColour = TeamColour.valueOf(team);
                     Location spawnLocation = arenaFile.getLocation("spawnLocations/"+team);
                     teamSpawnLocations.put(teamColour, spawnLocation);
+                    Location coreLocation = arenaFile.getLocation("coreLocations."+teamColour);
+                    coreLocations.put(teamColour, coreLocation);
                 }catch (Exception ignored){}
             }
             arena.setSpawnLocations(teamSpawnLocations);
+            arena.setCoreLocations(coreLocations);
             arenas.put(arenaName, arena);
             PTC.getPTC().getLogger().info("Arena "+arenaName+" has been loaded");
         }else{
@@ -71,5 +76,25 @@ public class ArenaManager {
         }
     }
 
+    public void saveArena(Arena arena){
+        Yaml arenaFile = getArenaFile(arena.getName());
+        for(TeamColour teamColour : arena.getSpawnLocations().keySet()){
+            arenaFile.setLocation("spawnLocations."+teamColour, arena.getSpawnLocations().get(teamColour));
+            arenaFile.setLocation("coreLocations."+teamColour, arena.getCoreLocations().get(teamColour));
+            arenaFile.setLocation("shopLocations."+teamColour, arena.getShopLocations().get(teamColour));
+        }
+        for(int itemPosition : arena.getDefaultKit().keySet()){
+            arenaFile.setItemStack("defaultKit."+itemPosition, arena.getDefaultKit().get(itemPosition));
+        }
+        arenaFile.setLocation("waitingLobby", arena.getWaitingLobby());
+        arenaFile.set("maxTeamPlayers", arena.getMaxTeamPlayers());
+        arenaFile.saveFileConfiguration();
+        arenas.put(arena.getName(), arena);
+    }
 
+    public Yaml getArenaFile(String arenaName){
+        Yaml arenaFile = new Yaml(PTC.getPTC(), "arenas/"+arenaName);
+        arenaFile.registerFileConfiguration();
+        return arenaFile;
+    }
 }

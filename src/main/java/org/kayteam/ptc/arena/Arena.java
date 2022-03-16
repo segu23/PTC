@@ -12,17 +12,17 @@ import java.util.List;
 public class Arena {
 
     private final String name;
-    private final Yaml file;
+    private Yaml file;
     private HashMap<Integer, ItemStack> defaultKit;
     private HashMap<TeamColour, Location> spawnLocations;
     private Location waitingLobby;
     private final File worldTemplateDir;
     private HashMap<TeamColour, Location> coreLocations = new HashMap<>();
     private HashMap<TeamColour, Location> shopLocations = new HashMap<>();
+    private int maxTeamPlayers = 0;
 
-    public Arena(String name, Yaml file, File worldTemplateDir) {
+    public Arena(String name, File worldTemplateDir) {
         this.name = name;
-        this.file = file;
         this.worldTemplateDir = worldTemplateDir;
     }
 
@@ -76,5 +76,22 @@ public class Arena {
 
     public void setShopLocations(HashMap<TeamColour, Location> shopLocations) {
         this.shopLocations = shopLocations;
+    }
+
+    public void setFile(Yaml file) {
+        this.file = file;
+    }
+
+    public int getMaxTeamPlayers() {
+        return maxTeamPlayers;
+    }
+
+    public void setMaxTeamPlayers(int maxTeamPlayers) {
+        this.maxTeamPlayers = maxTeamPlayers;
+    }
+
+    public boolean isPlayable(){
+        return ((name != null) && (file != null) && (defaultKit.values().size()>1) && (spawnLocations.values().size()>1) && (waitingLobby != null) &&
+                (worldTemplateDir != null) && (coreLocations.values().size()>1) && (shopLocations.values().size()>1) && (maxTeamPlayers>0));
     }
 }

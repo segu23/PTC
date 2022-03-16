@@ -1,0 +1,44 @@
+arenaSelector:
+  title: "Arena Selector"
+  rows: 6
+  items:
+    close:
+      material: BARRIER
+      name: "&cCerrar menú"
+      lore:
+        - ""
+        - " &f➤ &7Click izquierdo para cerrar"
+    nextPage:
+      material: ARROW
+      name: "&aPágina siguiente"
+      lore:
+        - ""
+        - " &f➤ &7Click izquierdo para ir"
+        - "   &7a la siguiente página"
+    prevPage:
+      material: ARROW
+      name: "&aPágina anterior"
+      lore:
+        - ""
+        - " &f➤ &7Click izquierdo para ir"
+        - "   &7a la anterior página"
+    arenaWaiting:
+      material: YELLOW_WOOL
+      name: "&b%arenaName%"
+      lore:
+        - ""
+        - " &f➤ &7Esperando jugadores"
+        - ""
+        - " &f➤ &7%players%&f/&7%maxPlayers%"
+        - ""
+        - " &f➤ &7Click izquierdo para unirte"
+    arena:
+      material: GREEN_WOOL
+      name: "&b%arenaName%"
+      lore:
+        - ""
+        - " &f➤ &7Esperando jugadores"
+        - ""
+        - " &f➤ &7Aún no hay ningún jugador"
+        - ""
+        - " &f➤ &7Click izquierdo para unirte"

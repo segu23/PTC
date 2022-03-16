@@ -1,6 +1,6 @@
 package org.kayteam.ptc.game;
 
-public class Team {
+public class GameTeam {
 
 
 }

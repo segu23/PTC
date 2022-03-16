@@ -1,2 +1,9 @@
 defaultGameDuration: 600
 initialCoreLives: 3
+cooldownMaterials:
+  STONE: 10
+  COAL_ORE: 20
+  IRON_ORE: 30
+  LAPIS_ORE: 30
+  GOLD_ORE: 40
+  DIAMOND_ORE: 50

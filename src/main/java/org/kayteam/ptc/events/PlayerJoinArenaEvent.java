@@ -1,4 +1,20 @@
 package org.kayteam.ptc.events;
 
-public class PlayerJoinArenaEvent {
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
+
+public class PlayerJoinArenaEvent extends Event {
+
+    private static final HandlerList handlerList = new HandlerList();
+    private boolean cancelled = false;
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlerList;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlerList;
+    }
 }
