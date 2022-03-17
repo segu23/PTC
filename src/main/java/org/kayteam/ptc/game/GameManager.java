@@ -38,7 +38,7 @@ public class GameManager {
             game = createNewGame(arena);
         }
         if(game.canJoin()){
-            GamePlayer gamePlayer = PTC.getPlayerManager().;
+            GamePlayer gamePlayer = PTC.getPlayerManager().getGamePlayer(player);
             gamePlayer.setGamePlayerStatus(GamePlayerStatus.WAITING);
             game.getTeams().get(TeamColour.NONE).add(gamePlayer);
             Location waitingLobby = arena.getWaitingLobby();

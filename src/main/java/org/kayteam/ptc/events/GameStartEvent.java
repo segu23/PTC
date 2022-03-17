@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 public class GameStartEvent extends Event {
 
     private static final HandlerList handlerList = new HandlerList();
-    private boolean cancelled = false;
 
     @Override
     public HandlerList getHandlers() {

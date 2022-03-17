@@ -13,7 +13,7 @@ import org.kayteam.ptc.PTC;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CMD_PTC implements CommandExecutor, TabCompleter {
+public class PTCCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(args.length > 0){

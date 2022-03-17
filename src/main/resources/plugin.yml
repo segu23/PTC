@@ -4,3 +4,4 @@ main: org.kayteam.ptc.PTC
 api-version: 1.18
 authors: [ KayTeam ]
 website: https://kayteam.org
+depend: [ PlaceholderAPI, TAB]

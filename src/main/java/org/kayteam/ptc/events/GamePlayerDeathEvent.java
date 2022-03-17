@@ -8,7 +8,6 @@ import org.kayteam.ptc.PTC;
 public class GamePlayerDeathEvent extends Event {
 
     private static final HandlerList handlerList = new HandlerList();
-    private boolean cancelled = false;
 
     private final Player gamePlayer;
 

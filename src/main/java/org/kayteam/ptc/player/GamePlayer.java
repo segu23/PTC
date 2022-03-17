@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.kayteam.ptc.PTC;
 import org.kayteam.ptc.game.Game;
 import org.kayteam.ptc.game.TeamColour;
+import org.kayteam.ptc.task.ScoreboardTask;
 
 public class GamePlayer {
 
@@ -14,6 +15,10 @@ public class GamePlayer {
     private TeamColour teamColour;
     private Game game;
     private GamePlayerStatus gamePlayerStatus;
+    private int victories = 0;
+    private int defeats = 0;
+    private int destroyedCores = 0;
+    private ScoreboardTask scoreboardTask;
 
     public GamePlayer(Player player) {
         this.player = player;
@@ -70,5 +75,37 @@ public class GamePlayer {
 
     public void setGame(Game game) {
         this.game = game;
+    }
+
+    public int getVictories() {
+        return victories;
+    }
+
+    public void setVictories(int victories) {
+        this.victories = victories;
+    }
+
+    public int getDefeats() {
+        return defeats;
+    }
+
+    public void setDefeats(int defeats) {
+        this.defeats = defeats;
+    }
+
+    public int getDestroyedCores() {
+        return destroyedCores;
+    }
+
+    public void setDestroyedCores(int destroyedCores) {
+        this.destroyedCores = destroyedCores;
+    }
+
+    public ScoreboardTask getScoreboardTask() {
+        return scoreboardTask;
+    }
+
+    public void setScoreboardTask(ScoreboardTask scoreboardTask) {
+        this.scoreboardTask = scoreboardTask;
     }
 }
