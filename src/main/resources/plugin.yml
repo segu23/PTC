@@ -5,3 +5,10 @@ api-version: 1.18
 authors: [ KayTeam ]
 website: https://kayteam.org
 depend: [ PlaceholderAPI, TAB]
+commands:
+  ptc:
+    description: PTC main command
+  arena:
+    description: Arena main command
+  test:
+    description: test

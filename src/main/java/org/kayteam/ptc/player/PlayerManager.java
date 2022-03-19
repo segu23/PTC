@@ -3,9 +3,8 @@ package org.kayteam.ptc.player;
 import me.neznamy.tab.api.TabPlayer;
 import me.neznamy.tab.api.scoreboard.Scoreboard;
 import org.bukkit.entity.Player;
-import org.kayteam.api.yaml.Yaml;
 import org.kayteam.ptc.PTC;
-import org.kayteam.ptc.task.ScoreboardTask;
+import org.kayteam.api.yaml.Yaml;
 
 import java.util.HashMap;
 
@@ -25,14 +24,11 @@ public class PlayerManager {
         Yaml playerFile = getPlayerFile(player.getName());
         GamePlayer gamePlayer = new GamePlayer(player);
         gamePlayer.setPoints(playerFile.getInt("points"));
-        //gamePlayer.setDeaths(playerFile.getInt("deaths"));
-        //gamePlayer.setKills(playerFile.getInt("kills"));
         gamePlayer.setDefeats(playerFile.getInt("defeats"));
         gamePlayer.setVictories(playerFile.getInt("victories"));
         gamePlayer.setDestroyedCores(playerFile.getInt("destroyedCores"));
+        gamePlayer.setLongerStreak(playerFile.getInt("longerStreak"));
         gamePlayer.setGamePlayerStatus(GamePlayerStatus.IN_LOBBY);
-        //gamePlayer.setScoreboardTask(new ScoreboardTask(player));
-        //gamePlayer.getScoreboardTask().startScheduler();
 
         GamePlayerStatus gamePlayerStatus = gamePlayer.getGamePlayerStatus();
         TabPlayer tabPlayer = PTC.getTabAPI().getPlayer(gamePlayer.getPlayer().getUniqueId());
@@ -45,6 +41,16 @@ public class PlayerManager {
         return gamePlayer;
     }
 
+    public void saveGamePlayer(GamePlayer gamePlayer){
+        Yaml playerFile = getPlayerFile(gamePlayer.getPlayer().getName());
+        playerFile.set("points", gamePlayer.getPoints());
+        playerFile.set("defeats", gamePlayer.getDefeats());
+        playerFile.set("victories", gamePlayer.getVictories());
+        playerFile.set("destroyedCores", gamePlayer.getDestroyedCores());
+        playerFile.set("longerStreak", gamePlayer.getLongerStreak());
+        playerFile.saveFileConfiguration();
+    }
+
     public Yaml getPlayerFile(String playerName){
         Yaml playerFile = new Yaml(PTC.getPTC(), "players", playerName);
         playerFile.registerFileConfiguration();
@@ -52,8 +58,11 @@ public class PlayerManager {
     }
 
     public void unloadPlayer(Player player){
-
+        saveGamePlayer(getGamePlayer(player));
+        // todo remove from game
+        gamePlayers.remove(player);
     }
+
 
     public GamePlayer getGamePlayer(Player player){
         return gamePlayers.get(player);

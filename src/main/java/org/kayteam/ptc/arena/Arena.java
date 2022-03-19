@@ -12,12 +12,12 @@ public class Arena {
 
     private final String name;
     private Yaml file;
-    private HashMap<Integer, ItemStack> defaultKit;
-    private HashMap<TeamColour, Location> spawnLocations;
+    private final HashMap<Integer, ItemStack> defaultKit = new HashMap<>();
+    private final HashMap<TeamColour, Location> spawnLocations = new HashMap<>();
     private Location waitingLobby;
     private final File worldTemplateDir;
-    private HashMap<TeamColour, Location> coreLocations = new HashMap<>();
-    private HashMap<TeamColour, Location> shopLocations = new HashMap<>();
+    private final HashMap<TeamColour, Location> coreLocations = new HashMap<>();
+    private final HashMap<TeamColour, Location> shopLocations = new HashMap<>();
     private int maxTeamPlayers = 0;
 
     public Arena(String name, File worldTemplateDir) {
@@ -37,16 +37,8 @@ public class Arena {
         return defaultKit;
     }
 
-    public void setDefaultKit(HashMap<Integer, ItemStack> defaultKit) {
-        this.defaultKit = defaultKit;
-    }
-
     public HashMap<TeamColour, Location> getSpawnLocations() {
         return spawnLocations;
-    }
-
-    public void setSpawnLocations(HashMap<TeamColour, Location> spawnLocations) {
-        this.spawnLocations = spawnLocations;
     }
 
     public Location getWaitingLobby() {
@@ -65,16 +57,8 @@ public class Arena {
         return coreLocations;
     }
 
-    public void setCoreLocations(HashMap<TeamColour, Location> coreLocations) {
-        this.coreLocations = coreLocations;
-    }
-
     public HashMap<TeamColour, Location> getShopLocations() {
         return shopLocations;
-    }
-
-    public void setShopLocations(HashMap<TeamColour, Location> shopLocations) {
-        this.shopLocations = shopLocations;
     }
 
     public void setFile(Yaml file) {

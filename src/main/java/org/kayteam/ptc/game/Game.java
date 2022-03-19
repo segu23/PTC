@@ -1,10 +1,14 @@
 package org.kayteam.ptc.game;
 
+import me.neznamy.tab.api.bossbar.BarColor;
+import me.neznamy.tab.api.bossbar.BarStyle;
+import me.neznamy.tab.api.bossbar.BossBar;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.kayteam.ptc.PTC;
 import org.kayteam.ptc.arena.Arena;
 import org.kayteam.ptc.player.GamePlayer;
+import org.kayteam.ptc.task.GameTask;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +21,7 @@ public class Game {
     private final GameTask gameTask = new GameTask(this);
     private final World world;
     private GameStatus gameStatus = GameStatus.WAITING;
+    private BossBar bossBar = PTC.getTabAPI().getBossBarManager().createBossBar(PTC.getGeneralConfigurations().bossBarTitle, "%ptc_game_progress%", BarColor.GREEN.toString(), BarStyle.PROGRESS.toString());
 
     public Game(Arena arena, World world) {
         this.arena = arena;
@@ -54,5 +59,13 @@ public class Game {
 
     public boolean canJoin(){
         return ((gameStatus == GameStatus.WAITING) && (teams.values().size() < arena.getMaxTeamPlayers()));
+    }
+
+    public BossBar getBossBar() {
+        return bossBar;
+    }
+
+    public void setBossBar(BossBar bossBar) {
+        this.bossBar = bossBar;
     }
 }

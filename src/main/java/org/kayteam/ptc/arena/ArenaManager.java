@@ -1,16 +1,13 @@
 package org.kayteam.ptc.arena;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
-import org.kayteam.api.yaml.Yaml;
 import org.kayteam.ptc.PTC;
 import org.kayteam.ptc.game.TeamColour;
+import org.kayteam.api.yaml.Yaml;
 
 import java.io.File;
 import java.time.Instant;
-import java.time.temporal.Temporal;
 import java.util.HashMap;
 
 public class ArenaManager {
@@ -18,6 +15,10 @@ public class ArenaManager {
     public HashMap<String, Arena> arenas = new HashMap<>();
 
     private Location mainLobby;
+
+    public ArenaManager() {
+        loadArenas();
+    }
 
     public Arena getArena(String arenaName){
         return arenas.get(arenaName);
@@ -33,42 +34,60 @@ public class ArenaManager {
             loadArena(arenaFile.getName().replaceAll(".yml", ""));
         }
         long finalTime = Instant.now().toEpochMilli();
-        long elapsedTime = initialTime-finalTime;
+        long elapsedTime = finalTime-initialTime;
         PTC.getPTC().getLogger().info("All arenas have been loaded in "+elapsedTime+"ms");
     }
 
     public void loadArena(String arenaName){
         Yaml arenaFile = getArenaFile(arenaName);
-        String worldTemplateName = arenaFile.getString("worldTemplateName");
-        File worldTemplateDir = new File(PTC.getPTC().getDataFolder()+File.separator+"worldTemplates"+File.separator+arenaName);
+        //String worldTemplateName = arenaFile.getString("worldTemplateName");
+        File worldTemplateDir = new File(PTC.getPTC().getDataFolder()+File.separator+"arenas"+File.separator+arenaName);
         if(worldTemplateDir.exists()){
             Arena arena = new Arena(arenaName, worldTemplateDir);
             arena.setFile(arenaFile);
             Location waitingLobby = arenaFile.getLocation("waitingLobby");
             arena.setWaitingLobby(waitingLobby);
-            HashMap<Integer, ItemStack> defaultKit = new HashMap<>();
-            for(String itemKey : arenaFile.getFileConfiguration().getConfigurationSection("defaultKit").getKeys(false)){
-                try{
-                    ItemStack kitItem = arenaFile.getItemStack("defaultKit."+itemKey);
-                    defaultKit.put(Integer.valueOf(itemKey), kitItem);
-                }catch (Exception e){
-                    PTC.getPTC().getLogger().warning("An error has ocurred trying to load default kit item "+itemKey+" on arena "+arenaName);
+            if(arenaFile.getFileConfiguration().contains("defaultKit")){
+                for(String itemKey : arenaFile.getFileConfiguration().getConfigurationSection("defaultKit").getKeys(false)){
+                    try{
+                        ItemStack kitItem = arenaFile.getItemStack("defaultKit."+itemKey);
+                        arena.getDefaultKit().put(Integer.valueOf(itemKey), kitItem);
+                    }catch (Exception e){
+                        PTC.getPTC().getLogger().warning("An error has ocurred trying to load default kit item "+itemKey+" on arena "+arenaName);
+                    }
                 }
             }
-            arena.setDefaultKit(defaultKit);
-            HashMap<TeamColour, Location> teamSpawnLocations = new HashMap<>();
-            HashMap<TeamColour, Location> coreLocations = new HashMap<>();
-            for(String team : arenaFile.getFileConfiguration().getConfigurationSection("spawnLocations").getKeys(false)) {
-                try{
-                    TeamColour teamColour = TeamColour.valueOf(team);
-                    Location spawnLocation = arenaFile.getLocation("spawnLocations/"+team);
-                    teamSpawnLocations.put(teamColour, spawnLocation);
-                    Location coreLocation = arenaFile.getLocation("coreLocations."+teamColour);
-                    coreLocations.put(teamColour, coreLocation);
-                }catch (Exception ignored){}
+            if(arenaFile.contains("spawnLocations")) {
+                for (String team : arenaFile.getFileConfiguration().getConfigurationSection("spawnLocations").getKeys(false)) {
+                    try {
+                        TeamColour teamColour = TeamColour.valueOf(team);
+
+                        Location spawnLocation = arenaFile.getLocation("spawnLocations/" + team);
+                        arena.getSpawnLocations().put(teamColour, spawnLocation);
+                    } catch (Exception ignored) {
+                    }
+                }
             }
-            arena.setSpawnLocations(teamSpawnLocations);
-            arena.setCoreLocations(coreLocations);
+            if(arenaFile.contains("coreLocations")) {
+                for (String team : arenaFile.getFileConfiguration().getConfigurationSection("coreLocations").getKeys(false)) {
+                    try {
+                        TeamColour teamColour = TeamColour.valueOf(team);
+
+                        Location coreLocation = arenaFile.getLocation("coreLocations." + teamColour);
+                        arena.getCoreLocations().put(teamColour, coreLocation);
+                    } catch (Exception ignored) {}
+                }
+            }
+            if(arenaFile.contains("shopLocations")){
+                for(String team : arenaFile.getFileConfiguration().getConfigurationSection("shopLocations").getKeys(false)) {
+                    try {
+                        TeamColour teamColour = TeamColour.valueOf(team);
+
+                        Location shopLocation = arenaFile.getLocation("shopLocations." + teamColour);
+                        arena.getShopLocations().put(teamColour, shopLocation);
+                    } catch (Exception ignored) {}
+                }
+            }
             arenas.put(arenaName, arena);
             PTC.getPTC().getLogger().info("Arena "+arenaName+" has been loaded");
         }else{
@@ -78,15 +97,25 @@ public class ArenaManager {
 
     public void saveArena(Arena arena){
         Yaml arenaFile = getArenaFile(arena.getName());
-        for(TeamColour teamColour : arena.getSpawnLocations().keySet()){
-            arenaFile.setLocation("spawnLocations."+teamColour, arena.getSpawnLocations().get(teamColour));
-            arenaFile.setLocation("coreLocations."+teamColour, arena.getCoreLocations().get(teamColour));
-            arenaFile.setLocation("shopLocations."+teamColour, arena.getShopLocations().get(teamColour));
+        for(TeamColour teamColour : TeamColour.values()){
+            if(arena.getSpawnLocations().containsKey(teamColour)) {
+                arenaFile.setLocation("spawnLocations." + teamColour, arena.getSpawnLocations().get(teamColour));
+            }
+            if(arena.getCoreLocations().containsKey(teamColour)) {
+                arenaFile.setLocation("coreLocations." + teamColour, arena.getCoreLocations().get(teamColour));
+            }
+            if(arena.getShopLocations().containsKey(teamColour)){
+                arenaFile.setLocation("shopLocations."+teamColour, arena.getShopLocations().get(teamColour));
+            }
         }
-        for(int itemPosition : arena.getDefaultKit().keySet()){
-            arenaFile.setItemStack("defaultKit."+itemPosition, arena.getDefaultKit().get(itemPosition));
+        if(!arena.getDefaultKit().isEmpty()){
+            for(int itemPosition : arena.getDefaultKit().keySet()){
+                arenaFile.setItemStack("defaultKit."+itemPosition, arena.getDefaultKit().get(itemPosition));
+            }
         }
-        arenaFile.setLocation("waitingLobby", arena.getWaitingLobby());
+        if(arena.getWaitingLobby() != null){
+            arenaFile.setLocation("waitingLobby", arena.getWaitingLobby());
+        }
         arenaFile.set("maxTeamPlayers", arena.getMaxTeamPlayers());
         arenaFile.saveFileConfiguration();
         arenas.put(arena.getName(), arena);

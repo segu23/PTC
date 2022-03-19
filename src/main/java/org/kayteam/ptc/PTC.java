@@ -4,18 +4,16 @@ import me.neznamy.tab.api.TabAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
-import org.kayteam.api.scheduler.ScheduleAction;
-import org.kayteam.api.scheduler.SimpleScheduler;
-import org.kayteam.api.yaml.Yaml;
 import org.kayteam.ptc.arena.ArenaManager;
+import org.kayteam.ptc.commands.ArenaCommand;
+import org.kayteam.ptc.commands.PTCCommand;
+import org.kayteam.ptc.commands.TestCommand;
 import org.kayteam.ptc.game.GameManager;
-import org.kayteam.ptc.listeners.BlockBreakListener;
-import org.kayteam.ptc.listeners.PlayerDeathListener;
-import org.kayteam.ptc.listeners.PlayerJoinListener;
+import org.kayteam.ptc.listeners.*;
 import org.kayteam.ptc.listeners.custom.*;
 import org.kayteam.ptc.placeholderexpansion.PTCExpansion;
 import org.kayteam.ptc.player.PlayerManager;
+import org.kayteam.api.yaml.Yaml;
 
 public final class PTC extends JavaPlugin {
 
@@ -34,14 +32,15 @@ public final class PTC extends JavaPlugin {
         ptc = this;
         registerFiles();
         registerListeners();
+        registerCommands();
         tabAPI = TabAPI.getInstance();
         generalConfigurations = new GeneralConfigurations();
         arenaManager = new ArenaManager();
         gameManager = new GameManager();
         playerManager = new PlayerManager();
-        getLogger().info("The plugin has been loaded successfully");
         new PTCExpansion().register();
         loadOnlinePlayers();
+        getLogger().info("The plugin has been loaded successfully");
     }
 
     public static void loadOnlinePlayers(){
@@ -59,8 +58,10 @@ public final class PTC extends JavaPlugin {
 
     private void registerListeners(){
         getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
+        getServer().getPluginManager().registerEvents(new BlockPlaceListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
         // Custom events
         getServer().getPluginManager().registerEvents(new CoreDestroyListener(), this);
         getServer().getPluginManager().registerEvents(new GameEndListener(), this);
@@ -68,6 +69,17 @@ public final class PTC extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GameStartListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinArenaListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerLeaveArenaListener(), this);
+    }
+
+    private void registerCommands(){
+        TestCommand testCommand = new TestCommand();
+        PTCCommand ptcCommand = new PTCCommand();
+        ArenaCommand arenaCommand = new ArenaCommand();
+        getCommand("test").setExecutor(testCommand);
+        getCommand("arena").setExecutor(arenaCommand);
+        getCommand("ptc").setExecutor(ptcCommand);
+        getCommand("arena").setTabCompleter(arenaCommand);
+        getCommand("ptc").setTabCompleter(ptcCommand);
     }
 
     @Override

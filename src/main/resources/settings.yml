@@ -1,5 +1,5 @@
-defaultGameDuration: 600
-initialCoreLives: 3
+defaultGameDuration: 3600
+initialCoreLives: 10
 cooldownMaterials:
   STONE: 10
   COAL_ORE: 20

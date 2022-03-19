@@ -1,13 +1,15 @@
 package org.kayteam.ptc;
 
 import com.cryptomorin.xseries.XMaterial;
+import me.neznamy.tab.api.bossbar.BarColor;
+import me.neznamy.tab.api.bossbar.BarStyle;
+import me.neznamy.tab.api.bossbar.BossBar;
 import me.neznamy.tab.api.scoreboard.Scoreboard;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.kayteam.api.yaml.Yaml;
 import org.kayteam.ptc.player.GamePlayerStatus;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,6 +23,9 @@ public class GeneralConfigurations {
     public int defaultGameDuration = 0;
     public Location lobbyLocation;
     public final HashMap<Material, Integer> cooldownMaterials = new HashMap<>();
+    public String bossBarTitle;
+    public BossBar bossBar;
+    public int bossBarProgress = 100;
 
     public GeneralConfigurations() {
         settings.registerFileConfiguration();
@@ -35,6 +40,8 @@ public class GeneralConfigurations {
         //
         lobbyLocation = settings.getLocation("lobbyLocation");
         //
+        bossBarTitle = PTC.messages.getString("bossBar.PLAYING");
+        //
         for(String materialName : settings.getFileConfiguration().getConfigurationSection("cooldownMaterials").getKeys(false)){
             XMaterial xmaterial = XMaterial.valueOf(materialName);
             Material material = xmaterial.parseMaterial();
@@ -46,19 +53,18 @@ public class GeneralConfigurations {
             }
         }
         //
-        List<String> inLobbyScoreboard = new ArrayList<>();
-        inLobbyScoreboard.add("&7");
-        inLobbyScoreboard.add(" &3Monedas: &f%ptc_coins%");
-        inLobbyScoreboard.add(" &3Usuario: &f%player_name%");
-        inLobbyScoreboard.add("&7");
-        inLobbyScoreboard.add(" &3Muertes: &f%statistic_deaths%");
-        inLobbyScoreboard.add(" &3Asesinatos: &f%statistic_player_kills%");
-        inLobbyScoreboard.add("&7");
-        inLobbyScoreboard.add(" &3Victorias: &f%ptc_victories%");
-        inLobbyScoreboard.add(" &3Derrotas: &f%ptc_defeats%");
-        inLobbyScoreboard.add(" &3Nucleos: &f%ptc_cores%");
-        inLobbyScoreboard.add("");
-        Scoreboard scoreboard = PTC.getTabAPI().getScoreboardManager().createScoreboard("playing", "&b&lPTC", inLobbyScoreboard);
-        scoreboardStatus.put(GamePlayerStatus.IN_LOBBY, scoreboard);
+        for(String gameStatusKey : PTC.messages.getFileConfiguration().getConfigurationSection("scoreboard").getKeys(false)){
+            try{
+                String scoreboardTitle = PTC.messages.getString("scoreboard."+gameStatusKey+".title");
+                List<String> scoreboardLines = PTC.messages.getStringList("scoreboard."+gameStatusKey+".lines");
+                GamePlayerStatus gamePlayerStatus = GamePlayerStatus.valueOf(gameStatusKey);
+                Scoreboard scoreboard = PTC.getTabAPI().getScoreboardManager().createScoreboard(gamePlayerStatus.toString(), scoreboardTitle, scoreboardLines);
+                scoreboardStatus.put(GamePlayerStatus.IN_LOBBY, scoreboard);
+            }catch (Exception e){
+                PTC.getPTC().getLogger().warning("An error has occurred trying to load "+gameStatusKey+" scoreboard");
+            }
+        }
+        //
+        bossBar = PTC.getTabAPI().getBossBarManager().createBossBar(bossBarTitle, bossBarProgress, BarColor.GREEN, BarStyle.PROGRESS);
     }
 }

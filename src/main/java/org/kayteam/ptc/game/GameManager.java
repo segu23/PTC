@@ -30,6 +30,10 @@ public class GameManager {
         return waitingGames;
     }
 
+    public void joinGame(Player player, String arenaName){
+        joinGame(player, PTC.getArenaManager().getArena(arenaName));
+    }
+
     public void joinGame(Player player, Arena arena){
         Game game;
         if(waitingGames.get(arena) != null){

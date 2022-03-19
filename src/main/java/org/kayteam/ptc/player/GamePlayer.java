@@ -4,7 +4,8 @@ import org.bukkit.entity.Player;
 import org.kayteam.ptc.PTC;
 import org.kayteam.ptc.game.Game;
 import org.kayteam.ptc.game.TeamColour;
-import org.kayteam.ptc.task.ScoreboardTask;
+
+import java.util.HashMap;
 
 public class GamePlayer {
 
@@ -18,7 +19,8 @@ public class GamePlayer {
     private int victories = 0;
     private int defeats = 0;
     private int destroyedCores = 0;
-    private ScoreboardTask scoreboardTask;
+    private int longerStreak = 0;
+    private final HashMap<Player, Integer> latestKills = new HashMap<>();
 
     public GamePlayer(Player player) {
         this.player = player;
@@ -101,11 +103,19 @@ public class GamePlayer {
         this.destroyedCores = destroyedCores;
     }
 
-    public ScoreboardTask getScoreboardTask() {
-        return scoreboardTask;
+    public int getPlayedGames(){
+        return defeats+victories;
     }
 
-    public void setScoreboardTask(ScoreboardTask scoreboardTask) {
-        this.scoreboardTask = scoreboardTask;
+    public int getLongerStreak() {
+        return longerStreak;
+    }
+
+    public void setLongerStreak(int longerStreak) {
+        this.longerStreak = longerStreak;
+    }
+
+    public HashMap<Player, Integer> getLatestKills() {
+        return latestKills;
     }
 }

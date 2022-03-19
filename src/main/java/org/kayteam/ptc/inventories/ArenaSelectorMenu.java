@@ -18,6 +18,7 @@ public class ArenaSelectorMenu extends InventoryBuilder {
         addLeftAction(49, (player, slot) -> {
             player.closeInventory();
         });
+        // Arenas
         List<Arena> availableArenas = new ArrayList<>();
         for(Arena arena : availableArenas){
             //if(PTC.getGameManager().getWaitingGames()){
