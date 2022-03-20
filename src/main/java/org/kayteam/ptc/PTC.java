@@ -4,6 +4,9 @@ import me.neznamy.tab.api.TabAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.kayteam.api.input.InputManager;
+import org.kayteam.api.simple.inventory.InventoryManager;
+import org.kayteam.api.simple.yaml.SimpleYaml;
 import org.kayteam.ptc.arena.ArenaManager;
 import org.kayteam.ptc.commands.ArenaCommand;
 import org.kayteam.ptc.commands.PTCCommand;
@@ -13,31 +16,34 @@ import org.kayteam.ptc.listeners.*;
 import org.kayteam.ptc.listeners.custom.*;
 import org.kayteam.ptc.placeholderexpansion.PTCExpansion;
 import org.kayteam.ptc.player.PlayerManager;
-import org.kayteam.api.yaml.Yaml;
 
 public final class PTC extends JavaPlugin {
 
-    public static Yaml messages;
-    public static Yaml inventories;
+    public static SimpleYaml messages;
+    public static SimpleYaml inventories;
     private static boolean debug = true;
     private static PTC ptc;
     private static ArenaManager arenaManager;
     private static GameManager gameManager;
     private static PlayerManager playerManager;
     private static GeneralConfigurations generalConfigurations;
+    private static InputManager inputManager;
+    private static InventoryManager inventoryManager;
     private static TabAPI tabAPI;
 
     @Override
     public void onEnable() {
         ptc = this;
         registerFiles();
-        registerListeners();
-        registerCommands();
         tabAPI = TabAPI.getInstance();
         generalConfigurations = new GeneralConfigurations();
         arenaManager = new ArenaManager();
         gameManager = new GameManager();
         playerManager = new PlayerManager();
+        inputManager = new InputManager();
+        inventoryManager = new InventoryManager();
+        registerCommands();
+        registerListeners();
         new PTCExpansion().register();
         loadOnlinePlayers();
         getLogger().info("The plugin has been loaded successfully");
@@ -50,13 +56,17 @@ public final class PTC extends JavaPlugin {
     }
 
     private void registerFiles(){
-        messages = new Yaml(PTC.getPTC(), "messages");
-        inventories = new Yaml(PTC.getPTC(), "inventories");
-        messages.registerFileConfiguration();
-        inventories.registerFileConfiguration();
+        messages = new SimpleYaml(PTC.getPTC(), "messages");
+        inventories = new SimpleYaml(PTC.getPTC(), "inventories");
+        messages.registerYamlFile();
+        inventories.registerYamlFile();
     }
 
     private void registerListeners(){
+        //
+        getServer().getPluginManager().registerEvents(inputManager, this);
+        //getServer().getPluginManager().registerEvents(inventoryManager, this);
+        // Bukkit events
         getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
         getServer().getPluginManager().registerEvents(new BlockPlaceListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
@@ -110,6 +120,14 @@ public final class PTC extends JavaPlugin {
 
     public static PlayerManager getPlayerManager() {
         return playerManager;
+    }
+
+    public static InputManager getInputManager() {
+        return inputManager;
+    }
+
+    public static InventoryManager getInventoryManager() {
+        return inventoryManager;
     }
 
     // Configurations

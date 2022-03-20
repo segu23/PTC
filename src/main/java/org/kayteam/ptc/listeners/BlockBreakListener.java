@@ -10,12 +10,36 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.kayteam.ptc.PTC;
+import org.kayteam.ptc.game.Game;
+import org.kayteam.ptc.game.GameArenaCore;
+import org.kayteam.ptc.game.TeamColour;
+import org.kayteam.ptc.player.GamePlayer;
 import org.kayteam.ptc.task.BlockRegenerationTask;
 import org.kayteam.ptc.util.BlockUtil;
 
 import java.util.Objects;
 
 public class BlockBreakListener implements Listener {
+
+    @EventHandler
+    public void onCoreBreak(BlockBreakEvent event) {
+        if(event.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+            return;
+        }
+        Game game = PTC.getPlayerManager().getGamePlayer(event.getPlayer()).getGame();
+        if(game != null){
+            Player player = event.getPlayer();
+            Location blockLocation = event.getBlock().getLocation();
+            if(game.getCoreLives().containsKey(blockLocation)){
+                GameArenaCore gameArenaCore = game.getCoreLives().get(blockLocation);
+                TeamColour coreTeam = gameArenaCore.getTeamColour();
+                GamePlayer gamePlayer =
+                if(){
+
+                }
+            }
+        }
+    }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
@@ -35,7 +59,6 @@ public class BlockBreakListener implements Listener {
                         player.getInventory().addItem(drop);
                     }
                 }
-
             }catch (IllegalArgumentException e){
                 ItemStack usedItem = player.getItemInHand();
                 if(usedItem.containsEnchantment(Enchantment.SILK_TOUCH) || usedItem.containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS)){
@@ -50,8 +73,6 @@ public class BlockBreakListener implements Listener {
                     }
                 }
             }
-            System.out.println("PEX "+player.getExp());
-            System.out.println("EXPT "+event.getExpToDrop());
             player.setTotalExperience((int) player.getExp()+event.getExpToDrop());
             new BlockRegenerationTask(event.getBlock()).startScheduler();
         }

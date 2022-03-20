@@ -1,3 +1,33 @@
+arenaList:
+  title: "Arena List"
+  rows: 6
+  items:
+    close:
+      material: BARRIER
+      name: "&cCerrar menú"
+      lore:
+        - ""
+        - " &f➤ &7Click izquierdo para cerrar"
+    nextPage:
+      material: ARROW
+      name: "&aPágina siguiente"
+      lore:
+        - ""
+        - " &f➤ &7Click izquierdo para ir"
+        - "   &7a la siguiente página"
+    prevPage:
+      material: ARROW
+      name: "&aPágina anterior"
+      lore:
+        - ""
+        - " &f➤ &7Click izquierdo para ir"
+        - "   &7a la anterior página"
+    arena:
+      material: CHEST
+      name: "&a%arenaName%"
+      lore:
+        - ""
+        - " &f➤ &7Nombre: "
 arenaSelector:
   title: "Arena Selector"
   rows: 6

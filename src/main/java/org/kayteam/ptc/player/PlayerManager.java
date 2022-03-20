@@ -3,8 +3,8 @@ package org.kayteam.ptc.player;
 import me.neznamy.tab.api.TabPlayer;
 import me.neznamy.tab.api.scoreboard.Scoreboard;
 import org.bukkit.entity.Player;
+import org.kayteam.api.simple.yaml.SimpleYaml;
 import org.kayteam.ptc.PTC;
-import org.kayteam.api.yaml.Yaml;
 
 import java.util.HashMap;
 
@@ -21,7 +21,7 @@ public class PlayerManager {
     }
 
     public GamePlayer loadPlayer(Player player){
-        Yaml playerFile = getPlayerFile(player.getName());
+        SimpleYaml playerFile = getPlayerFile(player.getName());
         GamePlayer gamePlayer = new GamePlayer(player);
         gamePlayer.setPoints(playerFile.getInt("points"));
         gamePlayer.setDefeats(playerFile.getInt("defeats"));
@@ -42,18 +42,18 @@ public class PlayerManager {
     }
 
     public void saveGamePlayer(GamePlayer gamePlayer){
-        Yaml playerFile = getPlayerFile(gamePlayer.getPlayer().getName());
+        SimpleYaml playerFile = getPlayerFile(gamePlayer.getPlayer().getName());
         playerFile.set("points", gamePlayer.getPoints());
         playerFile.set("defeats", gamePlayer.getDefeats());
         playerFile.set("victories", gamePlayer.getVictories());
         playerFile.set("destroyedCores", gamePlayer.getDestroyedCores());
         playerFile.set("longerStreak", gamePlayer.getLongerStreak());
-        playerFile.saveFileConfiguration();
+        playerFile.saveYamlFile();
     }
 
-    public Yaml getPlayerFile(String playerName){
-        Yaml playerFile = new Yaml(PTC.getPTC(), "players", playerName);
-        playerFile.registerFileConfiguration();
+    public SimpleYaml getPlayerFile(String playerName){
+        SimpleYaml playerFile = new SimpleYaml(PTC.getPTC(), "players", playerName);
+        playerFile.registerYamlFile();
         return playerFile;
     }
 

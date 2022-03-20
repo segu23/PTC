@@ -92,7 +92,7 @@
         <dependency>
             <groupId>com.github.KayTeam-Studio</groupId>
             <artifactId>KayTeamAPI</artifactId>
-            <version>LATEST</version>
+            <version>1.3.0</version>
         </dependency>
         <dependency>
             <groupId>me.neznamy</groupId>

@@ -19,37 +19,13 @@ public class PTCCommand implements CommandExecutor, TabCompleter {
         if(args.length > 0){
             switch(args[0].toLowerCase()){
                 case "reload":{
-
+                    break;
                 }
-                case "spawn":{
-                    if(sender instanceof Player){
-                        Player player = (Player) sender;
-                        if(args.length > 1){
-                            switch(args[1].toLowerCase()){
-                                case "set":{
-                                    PTC.getGeneralConfigurations().settings.setLocation("lobbyLocation", player.getLocation());
-                                    // todo lobby location setted
-                                    break;
-                                }
-                                case "tp":{
-                                    if(PTC.getGeneralConfigurations().lobbyLocation != null){
-                                        player.teleport(PTC.getGeneralConfigurations().lobbyLocation);
-                                        // todo teleported succesfully
-                                    }else{
-                                        // todo no location
-                                    }
-                                    break;
-                                }
-                                default:{
-                                    // todo help
-                                }
-                            }
-                        }else{
-                            // todo general help
-                        }
-                    }else{
-                        // todo only console command
-                    }
+                case "setspawn":{
+                    break;
+                }
+                case "tpspawn":{
+
                 }
             }
         }else{

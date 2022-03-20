@@ -2,7 +2,7 @@ package org.kayteam.ptc.arena;
 
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
-import org.kayteam.api.yaml.Yaml;
+import org.kayteam.api.simple.yaml.SimpleYaml;
 import org.kayteam.ptc.game.TeamColour;
 
 import java.io.File;
@@ -11,8 +11,8 @@ import java.util.HashMap;
 public class Arena {
 
     private final String name;
-    private Yaml file;
-    private final HashMap<Integer, ItemStack> defaultKit = new HashMap<>();
+    private SimpleYaml file;
+    private HashMap<TeamColour, HashMap<Integer, ItemStack>> defaultKit = new HashMap<>();
     private final HashMap<TeamColour, Location> spawnLocations = new HashMap<>();
     private Location waitingLobby;
     private final File worldTemplateDir;
@@ -29,12 +29,16 @@ public class Arena {
         return name;
     }
 
-    public Yaml getFile() {
+    public SimpleYaml getFile() {
         return file;
     }
 
-    public HashMap<Integer, ItemStack> getDefaultKit() {
+    public HashMap<TeamColour, HashMap<Integer, ItemStack>> getDefaultKit() {
         return defaultKit;
+    }
+
+    public void setDefaultKit(HashMap<TeamColour, HashMap<Integer, ItemStack>> defaultKit) {
+        this.defaultKit = defaultKit;
     }
 
     public HashMap<TeamColour, Location> getSpawnLocations() {
@@ -61,7 +65,7 @@ public class Arena {
         return shopLocations;
     }
 
-    public void setFile(Yaml file) {
+    public void setFile(SimpleYaml file) {
         this.file = file;
     }
 
@@ -74,7 +78,7 @@ public class Arena {
     }
 
     public boolean isPlayable(){
-        return ((name != null) && (file != null) && (defaultKit.values().size()>1) && (spawnLocations.values().size()>1) && (waitingLobby != null) &&
+        return ((name != null) && (file != null) && (defaultKit.size()>1) && (spawnLocations.values().size()>1) && (waitingLobby != null) &&
                 (worldTemplateDir != null) && (coreLocations.values().size()>1) && (shopLocations.values().size()>1) && (maxTeamPlayers>0));
     }
 }

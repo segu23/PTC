@@ -7,7 +7,7 @@ import me.neznamy.tab.api.bossbar.BossBar;
 import me.neznamy.tab.api.scoreboard.Scoreboard;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.kayteam.api.yaml.Yaml;
+import org.kayteam.api.simple.yaml.SimpleYaml;
 import org.kayteam.ptc.player.GamePlayerStatus;
 
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public class GeneralConfigurations {
 
-    public final Yaml settings = new Yaml(PTC.getPTC(), "settings");
+    public final SimpleYaml settings = new SimpleYaml(PTC.getPTC(), "settings");
 
     public HashMap<GamePlayerStatus, Scoreboard> scoreboardStatus = new HashMap<>();
 
@@ -26,9 +26,10 @@ public class GeneralConfigurations {
     public String bossBarTitle;
     public BossBar bossBar;
     public int bossBarProgress = 100;
+    public Location mainLobby;
 
     public GeneralConfigurations() {
-        settings.registerFileConfiguration();
+        settings.registerYamlFile();
         load();
     }
 
@@ -42,7 +43,9 @@ public class GeneralConfigurations {
         //
         bossBarTitle = PTC.messages.getString("bossBar.PLAYING");
         //
-        for(String materialName : settings.getFileConfiguration().getConfigurationSection("cooldownMaterials").getKeys(false)){
+        mainLobby = settings.getLocation("mainLobby");
+        //
+        for(String materialName : settings.getConfigurationSection("cooldownMaterials").getKeys(false)){
             XMaterial xmaterial = XMaterial.valueOf(materialName);
             Material material = xmaterial.parseMaterial();
             if(material != null){
@@ -53,7 +56,7 @@ public class GeneralConfigurations {
             }
         }
         //
-        for(String gameStatusKey : PTC.messages.getFileConfiguration().getConfigurationSection("scoreboard").getKeys(false)){
+        for(String gameStatusKey : PTC.messages.getConfigurationSection("scoreboard").getKeys(false)){
             try{
                 String scoreboardTitle = PTC.messages.getString("scoreboard."+gameStatusKey+".title");
                 List<String> scoreboardLines = PTC.messages.getStringList("scoreboard."+gameStatusKey+".lines");
