@@ -6,7 +6,7 @@ import org.kayteam.ptc.events.GameEndEvent;
 
 public class GameEndListener implements Listener {
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onGameEnd(GameEndEvent event) {
     }
 }

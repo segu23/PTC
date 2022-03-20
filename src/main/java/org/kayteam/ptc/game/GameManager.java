@@ -81,7 +81,7 @@ public class GameManager {
         for(TeamColour teamColour : game.getArena().getCoreLocations().keySet()){
             Location coreLocation = game.getArena().getCoreLocations().get(teamColour);
             coreLocation.setWorld(game.getWorld());
-            GameArenaCore gameArenaCore = new GameArenaCore(coreLocation, PTC.getGeneralConfigurations().initialCoreLives, teamColour);
+            GameArenaCore gameArenaCore = new GameArenaCore(coreLocation, PTC.getGeneralConfigurations().initialCoreLives, teamColour, game);
             game.getCoreLives().put(coreLocation, gameArenaCore);
         }
         for(TeamColour teamColour : game.getTeams().keySet()){

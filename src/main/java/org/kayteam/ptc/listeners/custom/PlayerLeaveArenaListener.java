@@ -6,7 +6,7 @@ import org.kayteam.ptc.events.PlayerLeaveArenaEvent;
 
 public class PlayerLeaveArenaListener implements Listener {
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onPlayerLeaveArena(PlayerLeaveArenaEvent event) {
     }
 }

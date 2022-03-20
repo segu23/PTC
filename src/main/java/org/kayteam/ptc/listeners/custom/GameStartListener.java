@@ -6,7 +6,7 @@ import org.kayteam.ptc.events.GameStartEvent;
 
 public class GameStartListener implements Listener {
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onGameStart(GameStartEvent event) {
     }
 }

@@ -8,7 +8,7 @@ import org.kayteam.ptc.events.GamePlayerDeathEvent;
 
 public class GamePlayerDeathListener implements Listener {
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onGamePlayerDeath(GamePlayerDeathEvent event) {
         Player gamePlayer = event.getPlayer();
         PTC.getPlayerManager().getGamePlayers().get(gamePlayer).setDeaths(PTC.getPlayerManager().getGamePlayers().get(gamePlayer).getDeaths()+1);

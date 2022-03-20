@@ -45,14 +45,7 @@ public final class PTC extends JavaPlugin {
         registerCommands();
         registerListeners();
         new PTCExpansion().register();
-        loadOnlinePlayers();
         getLogger().info("The plugin has been loaded successfully");
-    }
-
-    public static void loadOnlinePlayers(){
-        for(Player player : Bukkit.getServer().getOnlinePlayers()){
-            PTC.getPlayerManager().loadPlayer(player);
-        }
     }
 
     private void registerFiles(){
@@ -73,6 +66,7 @@ public final class PTC extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
         // Custom events
+        getServer().getPluginManager().registerEvents(new CoreBreakListener(), this);
         getServer().getPluginManager().registerEvents(new CoreDestroyListener(), this);
         getServer().getPluginManager().registerEvents(new GameEndListener(), this);
         getServer().getPluginManager().registerEvents(new GamePlayerDeathListener(), this);

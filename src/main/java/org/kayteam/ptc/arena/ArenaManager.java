@@ -9,6 +9,8 @@ import org.kayteam.ptc.game.TeamColour;
 import java.io.File;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ArenaManager {
 
@@ -129,5 +131,28 @@ public class ArenaManager {
         SimpleYaml arenaFile = new SimpleYaml(PTC.getPTC(), "arenas/"+arenaName);
         arenaFile.registerYamlFile();
         return arenaFile;
+    }
+
+    public void unloadArena(Arena arena, boolean save){
+        if(save){
+            saveArena(arena);
+        }
+        arenas.remove(arena.getName());
+    }
+
+    public void unloadArenas(){
+        arenas.values().forEach((arena) -> unloadArena(arena, true));
+    }
+
+    public void reloadArenas(){
+        long initialTime = Instant.now().toEpochMilli();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(() -> {
+            unloadArenas();
+            loadArenas();
+        });
+        long finalTime = Instant.now().toEpochMilli();
+        long elapsedTime = finalTime-initialTime;
+        PTC.getPTC().getLogger().info("All arenas have been reloaded in "+elapsedTime+"ms");
     }
 }

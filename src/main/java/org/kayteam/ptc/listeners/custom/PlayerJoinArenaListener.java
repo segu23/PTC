@@ -6,7 +6,7 @@ import org.kayteam.ptc.events.PlayerJoinArenaEvent;
 
 public class PlayerJoinArenaListener implements Listener {
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onPlayerJoinArena(PlayerJoinArenaEvent event) {
     }
 }

@@ -16,6 +16,10 @@ argumentMustBeNumber: "%prefix%&cEl argumento ingresado es inválido, por favor,
 cantPlaceBlock: "%prefix%&c¡No puedes poner este bloque!"
 breakBlockInput: "%prefix%&aRompe un bloque para seleccionar su posición. Presiona Shift para cancelar."
 defaultKitSetted: "%prefix%&aEl kit por defecto de la arena &f%arenaName% &aha sido establecido correctamente."
+mainLobbySetted: "%prefix%&aEl lobby principal ha sido establecido correctamente."
+mainLobbyTeleported: "%prefix%&aHas sido teletransportado al lobby principal."
+coreBreak: "%prefix%&aEl núcleo del equipo &f%teamColour% &aha sido destruido por &f%playerName% &aahora tiene &f%coreLives% &avidas."
+coreDestroy: "%prefix%&aEl núcleo del equipo &f%teamColour% &afue destruido por &f%playerName%&a."
 arenaInfo:
   - " &8» &aNombre: &f%arenaName%"
   - " &8» &aJugadores por equipo: &f%maxTeamPlayers%"

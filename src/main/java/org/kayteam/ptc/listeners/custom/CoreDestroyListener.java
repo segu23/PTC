@@ -6,7 +6,7 @@ import org.kayteam.ptc.events.CoreDestroyEvent;
 
 public class CoreDestroyListener implements Listener {
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onCoreDestroy(CoreDestroyEvent event) {
     }
 }

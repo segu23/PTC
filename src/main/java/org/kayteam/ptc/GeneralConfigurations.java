@@ -33,7 +33,7 @@ public class GeneralConfigurations {
         load();
     }
 
-    private void load(){
+    public void load(){
         //
         initialCoreLives = settings.getInt("initalCoreLives");
         //

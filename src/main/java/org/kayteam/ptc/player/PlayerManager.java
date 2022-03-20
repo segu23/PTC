@@ -2,11 +2,15 @@ package org.kayteam.ptc.player;
 
 import me.neznamy.tab.api.TabPlayer;
 import me.neznamy.tab.api.scoreboard.Scoreboard;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.kayteam.api.simple.yaml.SimpleYaml;
 import org.kayteam.ptc.PTC;
 
+import java.time.Instant;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PlayerManager {
 
@@ -14,6 +18,10 @@ public class PlayerManager {
 
     public HashMap<Player, GamePlayer> getGamePlayers() {
         return gamePlayers;
+    }
+
+    public PlayerManager() {
+        loadOnlinePlayers();
     }
 
     public boolean isGamePlayer(Player player){
@@ -57,14 +65,41 @@ public class PlayerManager {
         return playerFile;
     }
 
-    public void unloadPlayer(Player player){
-        saveGamePlayer(getGamePlayer(player));
+    public static void loadOnlinePlayers(){
+        for(Player player : Bukkit.getServer().getOnlinePlayers()){
+            PTC.getPlayerManager().loadPlayer(player);
+        }
+    }
+
+    public void unloadPlayer(Player player, boolean save){
+        if(save){
+            saveGamePlayer(getGamePlayer(player));
+        }
         // todo remove from game
         gamePlayers.remove(player);
     }
 
+    public void unloadGamePlayer(GamePlayer gamePlayer, boolean save){
+        unloadPlayer(gamePlayer.getPlayer(), save);
+    }
 
     public GamePlayer getGamePlayer(Player player){
         return gamePlayers.get(player);
+    }
+
+    public void unloadPlayers(){
+        gamePlayers.values().forEach((gamePlayer) -> unloadGamePlayer(gamePlayer, true));
+    }
+
+    public void reloadGamePlayers(){
+        long initialTime = Instant.now().toEpochMilli();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(() -> {
+            unloadPlayers();
+            loadOnlinePlayers();
+        });
+        long finalTime = Instant.now().toEpochMilli();
+        long elapsedTime = finalTime-initialTime;
+        PTC.getPTC().getLogger().info("All players data have been reloaded in "+elapsedTime+"ms");
     }
 }

@@ -4,22 +4,20 @@ import org.bukkit.Location;
 
 public class GameArenaCore {
 
-    private Location location;
-    private int lives = 0;
-    private TeamColour teamColour;
+    private final Location location;
+    private int lives;
+    private final TeamColour teamColour;
+    private final Game game;
 
-    public GameArenaCore(Location location, int lives, TeamColour teamColour) {
+    public GameArenaCore(Location location, int lives, TeamColour teamColour, Game game) {
         this.location = location;
         this.lives = lives;
         this.teamColour = teamColour;
+        this.game = game;
     }
 
     public Location getLocation() {
         return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
     }
 
     public int getLives() {
@@ -34,7 +32,7 @@ public class GameArenaCore {
         return teamColour;
     }
 
-    public void setTeamColour(TeamColour teamColour) {
-        this.teamColour = teamColour;
+    public Game getGame() {
+        return game;
     }
 }

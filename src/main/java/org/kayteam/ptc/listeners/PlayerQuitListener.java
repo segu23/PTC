@@ -9,6 +9,6 @@ public class PlayerQuitListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        PTC.getPlayerManager().unloadPlayer(event.getPlayer());
+        PTC.getPlayerManager().unloadPlayer(event.getPlayer(), true);
     }
 }

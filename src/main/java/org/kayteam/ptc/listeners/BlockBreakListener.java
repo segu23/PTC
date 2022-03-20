@@ -1,5 +1,6 @@
 package org.kayteam.ptc.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -33,9 +34,9 @@ public class BlockBreakListener implements Listener {
             if(game.getCoreLives().containsKey(blockLocation)){
                 GameArenaCore gameArenaCore = game.getCoreLives().get(blockLocation);
                 TeamColour coreTeam = gameArenaCore.getTeamColour();
-                GamePlayer gamePlayer =
-                if(){
-
+                GamePlayer gamePlayer = PTC.getPlayerManager().getGamePlayer(player);
+                if(!gamePlayer.getTeamColour().equals(gameArenaCore.getTeamColour())){
+                    Bukkit.getServer().getPluginManager().callEvent(new C);
                 }
             }
         }
