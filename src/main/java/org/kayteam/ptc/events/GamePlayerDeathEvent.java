@@ -4,14 +4,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.kayteam.ptc.PTC;
+import org.kayteam.ptc.player.GamePlayer;
 
 public class GamePlayerDeathEvent extends Event {
 
     private static final HandlerList handlerList = new HandlerList();
 
-    private final Player gamePlayer;
+    private final GamePlayer gamePlayer;
 
-    public Player getPlayer() {
+    public GamePlayerDeathEvent(GamePlayer gamePlayer) {
+        this.gamePlayer = gamePlayer;
+    }
+
+    public GamePlayer getGamePlayer() {
         return gamePlayer;
     }
 
@@ -22,9 +27,5 @@ public class GamePlayerDeathEvent extends Event {
 
     public static HandlerList getHandlerList() {
         return handlerList;
-    }
-
-    public GamePlayerDeathEvent(Player gamePlayer) {
-        this.gamePlayer = gamePlayer;
     }
 }

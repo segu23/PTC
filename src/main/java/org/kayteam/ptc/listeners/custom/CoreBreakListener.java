@@ -19,9 +19,10 @@ public class CoreBreakListener implements Listener {
         Game game = gameArenaCore.getGame();
         String message = PTC.messages.getString("coreBreak", new String[][]{
                 {"%teamColour%", gameArenaCore.getTeamColour().toString()},
-                {"%playerName%", }
+                {"%playerName%", event.getGamePlayer().getPlayer().getName()},
+                {"%%coreLives%%", String.valueOf(gameArenaCore.getLives())}
         });
-        game.getTeams().values().forEach((teamColour) -> teamColour.forEach((gamePlayer) -> SimpleYaml.sendMessage(gamePlayer.getPlayer(), message)));
+        game.getTeams().values().forEach((teamColour) -> teamColour.forEach((gamePlayer) -> SimpleYaml.sendMessage(gamePlayer.getPlayer(), (Object) message)));
         if(gameArenaCore.getLives() == 0){
             Bukkit.getServer().getPluginManager().callEvent(new CoreDestroyEvent(gameArenaCore, event.getGamePlayer()));
         }
