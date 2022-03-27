@@ -7,3 +7,7 @@ cooldownMaterials:
   LAPIS_ORE: 30
   GOLD_ORE: 40
   DIAMOND_ORE: 50
+chatFormat:
+  default: "&7%vault_prefix%%player_name%&7: &f%message%"
+  inGameGlobal: "&8[&7%teamColour%] &7%player_name%&8: &f%message%"
+  inGameTeam: "&8[&7TEAM&8] &7%player_name%&8: &f%message%"

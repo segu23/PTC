@@ -40,7 +40,6 @@ public class ArenaManager {
 
     public void loadArena(String arenaName){
         SimpleYaml arenaFile = getArenaFile(arenaName);
-        //String worldTemplateName = arenaFile.getString("worldTemplateName");
         File worldTemplateDir = new File(PTC.getPTC().getDataFolder()+File.separator+"arenas"+File.separator+arenaName);
         if(worldTemplateDir.exists()){
             Arena arena = new Arena(arenaName, worldTemplateDir);
@@ -60,6 +59,8 @@ public class ArenaManager {
                         }
                     }
                 }
+            }else{
+                PTC.getPTC().getLogger().warning("No default kit found for arena "+arenaName);
             }
             if(arenaFile.contains("spawnLocations")) {
                 for (String team : arenaFile.getConfigurationSection("spawnLocations").getKeys(false)) {
@@ -69,8 +70,11 @@ public class ArenaManager {
                         Location spawnLocation = arenaFile.getLocation("spawnLocations/" + team);
                         arena.getSpawnLocations().put(teamColour, spawnLocation);
                     } catch (Exception ignored) {
+                        PTC.getPTC().getLogger().warning("An error has occurred trying to load spawn location of team "+team+" on arena "+arenaName);
                     }
                 }
+            }else{
+                PTC.getPTC().getLogger().warning("No spawn locations found for arena "+arenaName);
             }
             if(arenaFile.contains("coreLocations")) {
                 for (String team : arenaFile.getConfigurationSection("coreLocations").getKeys(false)) {
@@ -79,8 +83,12 @@ public class ArenaManager {
 
                         Location coreLocation = arenaFile.getLocation("coreLocations." + teamColour);
                         arena.getCoreLocations().put(teamColour, coreLocation);
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                        PTC.getPTC().getLogger().warning("An error has occurred trying to load core location of team "+team+" on arena "+arenaName);
+                    }
                 }
+            }else{
+                PTC.getPTC().getLogger().warning("No core locations found for arena "+arenaName);
             }
             if(arenaFile.contains("shopLocations")){
                 for(String team : arenaFile.getConfigurationSection("shopLocations").getKeys(false)) {
@@ -89,13 +97,18 @@ public class ArenaManager {
 
                         Location shopLocation = arenaFile.getLocation("shopLocations." + teamColour);
                         arena.getShopLocations().put(teamColour, shopLocation);
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                        PTC.getPTC().getLogger().warning("An error has occurred trying to load shop location of team "+team+" on arena "+arenaName);
+                    }
                 }
+            }else{
+                PTC.getPTC().getLogger().warning("No shop locations found for arena "+arenaName);
             }
+            arena.setPlayable(true);
             arenas.put(arenaName, arena);
             PTC.getPTC().getLogger().info("Arena "+arenaName+" has been loaded");
         }else{
-            PTC.getPTC().getLogger().warning("An error has ocurred trying to load arena called "+arenaName);
+            PTC.getPTC().getLogger().warning("No arena file found for arena "+arenaName);
         }
     }
 
@@ -114,8 +127,15 @@ public class ArenaManager {
         }
         if(!arena.getDefaultKit().isEmpty()){
             for(TeamColour teamColour : arena.getDefaultKit().keySet()){
-                for(int itemPosition : arena.getDefaultKit().get(teamColour).keySet()){
-                    arenaFile.setItemStack("defaultKit."+teamColour+"."+itemPosition, arena.getDefaultKit().get(teamColour).get(itemPosition));
+                HashMap<Integer, ItemStack> teamKit = arena.getDefaultKit().get(teamColour);
+                System.out.println(teamKit);
+                if(teamKit != null){
+                    for(int itemPosition : teamKit.keySet()){
+                        ItemStack itemStack = teamKit.get(itemPosition);
+                        if(itemStack != null){
+                            arenaFile.setItemStack("defaultKit."+teamColour+"."+itemPosition, teamKit.get(itemPosition));
+                        }
+                    }
                 }
             }
         }
@@ -123,6 +143,7 @@ public class ArenaManager {
             arenaFile.setLocation("waitingLobby", arena.getWaitingLobby());
         }
         arenaFile.set("maxTeamPlayers", arena.getMaxTeamPlayers());
+        arenaFile.set("mixTeamPlayers", arena.getMinTeamPlayers());
         arenaFile.saveYamlFile();
         arenas.put(arena.getName(), arena);
     }

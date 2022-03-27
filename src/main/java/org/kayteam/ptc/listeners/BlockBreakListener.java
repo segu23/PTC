@@ -11,14 +11,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.kayteam.ptc.PTC;
+import org.kayteam.ptc.events.CoreBreakEvent;
 import org.kayteam.ptc.game.Game;
 import org.kayteam.ptc.game.GameArenaCore;
 import org.kayteam.ptc.game.TeamColour;
 import org.kayteam.ptc.player.GamePlayer;
 import org.kayteam.ptc.task.BlockRegenerationTask;
 import org.kayteam.ptc.util.BlockUtil;
-
-import java.util.Objects;
 
 public class BlockBreakListener implements Listener {
 
@@ -31,12 +30,12 @@ public class BlockBreakListener implements Listener {
         if(game != null){
             Player player = event.getPlayer();
             Location blockLocation = event.getBlock().getLocation();
-            if(game.getCoreLives().containsKey(blockLocation)){
-                GameArenaCore gameArenaCore = game.getCoreLives().get(blockLocation);
+            if(game.getCores().containsKey(blockLocation)){
+                GameArenaCore gameArenaCore = game.getCores().get(blockLocation);
                 TeamColour coreTeam = gameArenaCore.getTeamColour();
                 GamePlayer gamePlayer = PTC.getPlayerManager().getGamePlayer(player);
                 if(!gamePlayer.getTeamColour().equals(gameArenaCore.getTeamColour())){
-                    Bukkit.getServer().getPluginManager().callEvent(new C);
+                    Bukkit.getServer().getPluginManager().callEvent(new CoreBreakEvent(gameArenaCore, gamePlayer));
                 }
             }
         }

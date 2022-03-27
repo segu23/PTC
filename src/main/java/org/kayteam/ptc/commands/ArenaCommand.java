@@ -1,5 +1,6 @@
 package org.kayteam.ptc.commands;
 
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,6 +20,7 @@ import org.kayteam.ptc.util.PermissionChecker;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ArenaCommand implements CommandExecutor, TabCompleter {
@@ -53,7 +55,7 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                                 if(args.length > 2){
                                     switch (args[2].toLowerCase()){
                                         case "setspawn":{
-                                            if(PermissionChecker.check(player, "ptc.cmd.arena.setspawn")){
+                                            if(PermissionChecker.check(player, "ptc.cmd.arena.edit.setspawn")){
                                                 if(args.length > 3){
                                                     try{
                                                         TeamColour teamColour = TeamColour.valueOf(args[3].toUpperCase());
@@ -71,7 +73,7 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                                             break;
                                         }
                                         case "setwaitinglobby":{
-                                            if(PermissionChecker.check(player, "ptc.cmd.arena.setwaitinglobby")){
+                                            if(PermissionChecker.check(player, "ptc.cmd.arena.edit.setwaitinglobby")){
                                                 Location waitingLobby = player.getLocation();
                                                 arena.setWaitingLobby(waitingLobby);
                                                 PTC.getArenaManager().saveArena(arena);
@@ -80,7 +82,7 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                                             break;
                                         }
                                         case "setshop":{
-                                            if(PermissionChecker.check(player, "ptc.cmd.arena.setshop")){
+                                            if(PermissionChecker.check(player, "ptc.cmd.arena.edit.setshop")){
                                                 if(args.length > 3){
                                                     try{
                                                         TeamColour teamColour = TeamColour.valueOf(args[3].toUpperCase());
@@ -109,7 +111,7 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                                             break;
                                         }
                                         case "setcore":{
-                                            if(PermissionChecker.check(player, "ptc.cmd.arena.setcore")){
+                                            if(PermissionChecker.check(player, "ptc.cmd.arena.edit.setcore")){
                                                 if(args.length > 3){
                                                     try{
                                                         TeamColour teamColour = TeamColour.valueOf(args[3].toUpperCase());
@@ -139,7 +141,7 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                                             break;
                                         }
                                         case "setmaxteamplayers":{
-                                            if(PermissionChecker.check(player, "ptc.cmd.arena.setmaxteamplayers")){
+                                            if(PermissionChecker.check(player, "ptc.cmd.arena.edit.setmaxteamplayers")){
                                                 if(args.length > 3){
                                                     try{
                                                         int maxPlayers = Integer.parseInt(args[3]);
@@ -158,23 +160,51 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                                             }
                                             break;
                                         }
+                                        case "setminteamplayers":{
+                                            if(PermissionChecker.check(player, "ptc.cmd.arena.edit.setminteamplayers")){
+                                                if(args.length > 3){
+                                                    try{
+                                                        int maxPlayers = Integer.parseInt(args[3]);
+                                                        arena.setMaxTeamPlayers(maxPlayers);
+                                                        PTC.getArenaManager().saveArena(arena);
+                                                        PTC.messages.sendMessage(player, "arenaMinTeamPlayersSetted", new String[][]{
+                                                                {"%arenaName%", arenaName},
+                                                                {"%minTeamPlayers%", args[3]}
+                                                        });
+                                                    }catch (Exception e){
+                                                        PTC.messages.sendMessage(player, "argumentMustBeNumber");
+                                                    }
+                                                }else{
+                                                    PTC.messages.sendMessage(player, "invalidArguments", new String[][]{{"%usage%", "arena edit <arenaName> setminteamplayers <maxTeamPlayers>"}});
+                                                }
+                                            }
+                                            break;
+                                        }
                                         case "setdefaultkit":{
-                                            if(PermissionChecker.check(player, "ptc.cmd.arena.setdefaultkit")){
+                                            if(PermissionChecker.check(player, "ptc.cmd.arena.edit.setdefaultkit")){
                                                 if(args.length > 3) {
                                                     try {
                                                         TeamColour teamColour = TeamColour.valueOf(args[3].toUpperCase());
                                                         arena.getDefaultKit().clear();
                                                         int slot = 0;
+                                                        HashMap<Integer, ItemStack> kit = new HashMap<>();
                                                         for(ItemStack itemStack : player.getInventory().getContents()){
-                                                            arena.getDefaultKit().get(teamColour).put(slot, itemStack);
+                                                            if(itemStack != null){
+                                                                kit.put(slot, itemStack);
+                                                            }
                                                             slot++;
                                                         }
+                                                        kit.put(100, player.getInventory().getBoots());
+                                                        kit.put(101, player.getInventory().getLeggings());
+                                                        kit.put(102, player.getInventory().getChestplate());
+                                                        kit.put(103, player.getInventory().getHelmet());
+                                                        arena.getDefaultKit().put(teamColour, kit);
                                                         PTC.getArenaManager().saveArena(arena);
                                                         PTC.messages.sendMessage(player, "defaultKitSetted", new String[][]{{"%arenaName%", arenaName}});
                                                     }catch (IllegalArgumentException e){
                                                         PTC.messages.sendMessage(player, "invalidTeamColour");
                                                     }
-                                                }else {
+                                                }else{
                                                     PTC.messages.sendMessage(player, "invalidArguments", new String[][]{{"%usage%", "arena edit <arenaName> setdefaultkit RED/BLUE/GREEN/YELLOW"}});
                                                 }
                                             }
@@ -184,6 +214,8 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                                             // todo command help
                                         }
                                     }
+                                }else{
+                                    // todo command help
                                 }
                             }else{
                                 PTC.messages.sendMessage(player, "invalidArenaName");
@@ -206,6 +238,7 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                                     WorldUtil.createWorldTemplate(player.getWorld(), PTC.getPTC().getDataFolder() + "/arenas", arenaName);
                                     Arena arena = new Arena(arenaName, new File(PTC.getPTC().getDataFolder() + "/arenas/" + arenaName));
                                     PTC.getArenaManager().saveArena(arena);
+                                    // todo finish command
                                 } else {
                                     PTC.messages.sendMessage(sender, "arenaAlreadyExist");
                                 }
@@ -223,10 +256,12 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                         if(args.length > 1){
                             String arenaName = args[1];
                             if(!PTC.getArenaManager().isArena(arenaName)){
-
+                                // todo finish command
                             }else{
                                 PTC.messages.sendMessage(sender, "invalidArenaName");
                             }
+                        }else{
+                            PTC.messages.sendMessage(sender, "invalidArguments", new String[][]{{"%usage%", "arena delete <arenaName>"}});
                         }
                     }
                     break;
@@ -239,7 +274,7 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                                 String arenaName = args[1];
                                 if (!PTC.getArenaManager().isArena(arenaName)) {
                                     PTC.getGameManager().joinGame(player, arenaName);
-
+                                    // todo finish command
                                 }else{
                                     PTC.messages.sendMessage(sender, "invalidArenaName");
                                 }
@@ -310,6 +345,7 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                     tabs.add("setspawn");
                     tabs.add("setdefaultkit");
                     tabs.add("setmaxteamplayers");
+                    tabs.add("setminteamplayers");
                 }
             }
             return tabs;

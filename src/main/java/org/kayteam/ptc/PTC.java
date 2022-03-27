@@ -1,8 +1,6 @@
 package org.kayteam.ptc;
 
 import me.neznamy.tab.api.TabAPI;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.kayteam.api.input.InputManager;
 import org.kayteam.api.simple.inventory.InventoryManager;
@@ -45,6 +43,7 @@ public final class PTC extends JavaPlugin {
         registerCommands();
         registerListeners();
         new PTCExpansion().register();
+        playerManager.loadOnlinePlayers();
         getLogger().info("The plugin has been loaded successfully");
     }
 
@@ -56,10 +55,11 @@ public final class PTC extends JavaPlugin {
     }
 
     private void registerListeners(){
-        //
+        // Managers
         getServer().getPluginManager().registerEvents(inputManager, this);
         //getServer().getPluginManager().registerEvents(inventoryManager, this);
         // Bukkit events
+        getServer().getPluginManager().registerEvents(new AsyncPlayerChatListener(), this);
         getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
         getServer().getPluginManager().registerEvents(new BlockPlaceListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
@@ -71,8 +71,8 @@ public final class PTC extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GameEndListener(), this);
         getServer().getPluginManager().registerEvents(new GamePlayerDeathListener(), this);
         getServer().getPluginManager().registerEvents(new GameStartListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerJoinArenaListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerLeaveArenaListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinGameListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerLeaveGameListener(), this);
     }
 
     private void registerCommands(){
@@ -88,6 +88,9 @@ public final class PTC extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        arenaManager.unloadArenas();
+        playerManager.unloadPlayers();
+        getLogger().info("The plugin has been disabled successfully");
     }
 
     // Debug

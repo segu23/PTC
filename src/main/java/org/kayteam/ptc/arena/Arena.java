@@ -12,13 +12,15 @@ public class Arena {
 
     private final String name;
     private SimpleYaml file;
-    private HashMap<TeamColour, HashMap<Integer, ItemStack>> defaultKit = new HashMap<>();
-    private final HashMap<TeamColour, Location> spawnLocations = new HashMap<>();
     private Location waitingLobby;
     private final File worldTemplateDir;
+    private HashMap<TeamColour, HashMap<Integer, ItemStack>> defaultKit = new HashMap<>();
+    private final HashMap<TeamColour, Location> spawnLocations = new HashMap<>();
     private final HashMap<TeamColour, Location> coreLocations = new HashMap<>();
     private final HashMap<TeamColour, Location> shopLocations = new HashMap<>();
-    private int maxTeamPlayers = 0;
+    private int maxTeamPlayers = 1;
+    private int minTeamPlayers = 0;
+    private boolean playable = false;
 
     public Arena(String name, File worldTemplateDir) {
         this.name = name;
@@ -77,8 +79,19 @@ public class Arena {
         this.maxTeamPlayers = maxTeamPlayers;
     }
 
-    public boolean isPlayable(){
-        return ((name != null) && (file != null) && (defaultKit.size()>1) && (spawnLocations.values().size()>1) && (waitingLobby != null) &&
-                (worldTemplateDir != null) && (coreLocations.values().size()>1) && (shopLocations.values().size()>1) && (maxTeamPlayers>0));
+    public int getMinTeamPlayers() {
+        return minTeamPlayers;
+    }
+
+    public void setMinTeamPlayers(int minTeamPlayers) {
+        this.minTeamPlayers = minTeamPlayers;
+    }
+
+    public boolean isPlayable() {
+        return playable;
+    }
+
+    public void setPlayable(boolean playable) {
+        this.playable = playable;
     }
 }

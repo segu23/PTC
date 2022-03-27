@@ -20,28 +20,30 @@ public class PlayerManager {
         return gamePlayers;
     }
 
-    public PlayerManager() {
-        loadOnlinePlayers();
-    }
-
     public boolean isGamePlayer(Player player){
         return gamePlayers.containsKey(player);
     }
 
     public GamePlayer loadPlayer(Player player){
+        if(PTC.getGeneralConfigurations().lobbyLocation != null){
+            player.teleport(PTC.getGeneralConfigurations().lobbyLocation);
+        }
         SimpleYaml playerFile = getPlayerFile(player.getName());
         GamePlayer gamePlayer = new GamePlayer(player);
-        gamePlayer.setPoints(playerFile.getInt("points"));
-        gamePlayer.setDefeats(playerFile.getInt("defeats"));
-        gamePlayer.setVictories(playerFile.getInt("victories"));
-        gamePlayer.setDestroyedCores(playerFile.getInt("destroyedCores"));
-        gamePlayer.setLongerStreak(playerFile.getInt("longerStreak"));
+        gamePlayer.setPoints(playerFile.getInt("points", 0));
+        gamePlayer.setDefeats(playerFile.getInt("defeats", 0));
+        gamePlayer.setVictories(playerFile.getInt("victories", 0));
+        gamePlayer.setDestroyedCores(playerFile.getInt("destroyedCores", 0));
+        gamePlayer.setLongerStreak(playerFile.getInt("longerStreak", 0));
         gamePlayer.setGamePlayerStatus(GamePlayerStatus.IN_LOBBY);
+        saveGamePlayer(gamePlayer);
 
         GamePlayerStatus gamePlayerStatus = gamePlayer.getGamePlayerStatus();
-        TabPlayer tabPlayer = PTC.getTabAPI().getPlayer(gamePlayer.getPlayer().getUniqueId());
         Scoreboard scoreboard = PTC.getGeneralConfigurations().scoreboardStatus.get(gamePlayerStatus);
-        PTC.getTabAPI().getScoreboardManager().showScoreboard(tabPlayer, scoreboard);
+        Bukkit.getServer().getScheduler().runTaskLater(PTC.getPTC(), () -> {
+            TabPlayer tabPlayer = PTC.getTabAPI().getPlayer(gamePlayer.getPlayer().getUniqueId());
+            PTC.getTabAPI().getScoreboardManager().showScoreboard(tabPlayer, scoreboard);
+        }, 40L);
 
         if(PTC.isDebug()){
             PTC.getPTC().getLogger().info("Player "+player.getName()+" data has been loaded successfully");
@@ -65,9 +67,9 @@ public class PlayerManager {
         return playerFile;
     }
 
-    public static void loadOnlinePlayers(){
+    public void loadOnlinePlayers(){
         for(Player player : Bukkit.getServer().getOnlinePlayers()){
-            PTC.getPlayerManager().loadPlayer(player);
+            loadPlayer(player);
         }
     }
 

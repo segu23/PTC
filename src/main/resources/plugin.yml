@@ -12,3 +12,32 @@ commands:
     description: Arena main command
   test:
     description: test
+permissions:
+  ptc.chat.color:
+    description: Allows you to use color in chat
+  ptc.cmd.arena.list:
+    description: Allows you to list arenas
+  ptc.cmd.arena.info:
+    description: Allows you to get info about arena
+  ptc.cmd.arena.create:
+    description: Allows you to create arena
+  ptc.cmd.arena.delete:
+    description: Allows you to delete arena
+  ptc.cmd.arena.join:
+    description: Allows you to join arena
+  ptc.cmd.arena.edit:
+    description: Allows you to edit arena
+  ptc.cmd.arena.edit.setspawn:
+    description: Allows you to set spawn
+  ptc.cmd.arena.edit.setwaitinglobby:
+    description: Allows you to set waiting lobby
+  ptc.cmd.arena.edit.setshop:
+    description: Allows you to set shop
+  ptc.cmd.arena.edit.setcore:
+    description: Allows you to set core
+  ptc.cmd.arena.edit.setmaxteamplayers:
+    description: Allows you to set max team players
+  ptc.cmd.arena.edit.setminteamplayers:
+    description: Allows you to set min team players
+  ptc.cmd.arena.edit.setdefaultkit:
+    description: Allows you to set default kit

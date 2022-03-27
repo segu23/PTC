@@ -28,6 +28,8 @@ public class GeneralConfigurations {
     public int bossBarProgress = 100;
     public Location mainLobby;
 
+    public HashMap<ChatMode, String> chatFormats = new HashMap<>();
+
     public GeneralConfigurations() {
         settings.registerYamlFile();
         load();
@@ -69,5 +71,9 @@ public class GeneralConfigurations {
         }
         //
         bossBar = PTC.getTabAPI().getBossBarManager().createBossBar(bossBarTitle, bossBarProgress, BarColor.GREEN, BarStyle.PROGRESS);
+        //
+        chatFormats.put(ChatMode.DEFAULT, settings.getString("chatFormat.default"));
+        chatFormats.put(ChatMode.IN_GAME_GLOBAL, settings.getString("chatFormat.inGameGlobal"));
+        chatFormats.put(ChatMode.IN_GAME_TEAM, settings.getString("chatFormat.inGameTeam"));
     }
 }

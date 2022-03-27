@@ -21,20 +21,23 @@ public class PTCCommand implements CommandExecutor, TabCompleter {
         if(args.length > 0){
             switch(args[0].toLowerCase()){
                 case "reload":{
-                    PTC.messages.reloadYamlFile();
-                    PTC.inventories.reloadYamlFile();
-                    PTC.getGeneralConfigurations().load();
-                    PTC.getArenaManager().reloadArenas();
-                    PTC.getPlayerManager().reloadGamePlayers();
+                    if(PermissionChecker.check(sender, "ptc.cmd.ptc.reload")) {
+                        PTC.messages.reloadYamlFile();
+                        PTC.inventories.reloadYamlFile();
+                        PTC.getGeneralConfigurations().load();
+                        PTC.getArenaManager().reloadArenas();
+                        PTC.getPlayerManager().reloadGamePlayers();
+                        PTC.messages.sendMessage(sender, "pluginReloaded");
+                    }
                     break;
                 }
-                case "setspawn":{
-                    if(PermissionChecker.check(sender, "ptc.cmd.ptc.setspawn")) {
+                case "setmainlobby":{
+                    if(PermissionChecker.check(sender, "ptc.cmd.ptc.setmainlobby")) {
                         if (sender instanceof Player) {
                             Player player = (Player) sender;
-                            Location spawnLocation = player.getLocation();
-                            PTC.getGeneralConfigurations().mainLobby = spawnLocation;
-                            PTC.getGeneralConfigurations().settings.set("mainLobby", spawnLocation);
+                            Location mainLobbyLocation = player.getLocation();
+                            PTC.getGeneralConfigurations().mainLobby = mainLobbyLocation;
+                            PTC.getGeneralConfigurations().settings.set("mainLobby", mainLobbyLocation);
                             PTC.getGeneralConfigurations().settings.saveYamlFile();
                             PTC.messages.sendMessage(player, "mainLobbySetted");
                         }else{
@@ -70,11 +73,16 @@ public class PTCCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         List<String> tabs = new ArrayList<>();
         if(args.length == 0){
-            if(sender.hasPermission("ptc.cmd.ptc.setspawn")){
-                tabs.add("setspawn");
-                tabs.add("reload");
+            if(sender.hasPermission("ptc.cmd.ptc.setmainlobby")){
+                tabs.add("setmainlobby");
+            }
+            if(sender.hasPermission("ptc.cmd.ptc.tpspawn")){
                 tabs.add("tpspawn");
             }
+            if(sender.hasPermission("ptc.cmd.ptc.reload")){
+                tabs.add("reload");
+            }
+            return tabs;
         }
         return null;
     }
